@@ -19,6 +19,32 @@
   }
 }
 
+#c {
+  position: fixed;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  top: 0;
+  width: calc(100% - #{$right-sidebar-width-narrow});
+  height: 100%;
+  display: block;
+  z-index: -1;
+}
+.diagram {
+  display: inline-block;
+  width: calc(100% - #{$right-sidebar-width-narrow});
+  height: 20em;
+  border: 1px solid black;
+}
+.left {
+  float: left;
+  margin-right: .25em;
+}
+.right {
+  float: right;
+  margin-left: .25em;
+}
+
 body {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -556,4 +582,6 @@ body {
       padding-right: 0;
     }
   }
+
+
 }
