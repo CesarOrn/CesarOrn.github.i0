@@ -28,53 +28,52 @@ If you have ever shot a model rocket you might have seen the rocket spinning whe
 <script type="module">
 
 import * as THREE from '../assets/js/three/build/three.module.js';
-//import {OBJLoader} from '../assets/js/three/src/loaders/ObjectLoader.js';
+import {OBJLoader} from '../assets/js/three/examples/jsm/loaders/OBJLoader.js';
+import { GLTFLoader } from '../assets/js/three/examples/jsm/loaders/GLTFLoader.js';
 
 function main() {
 const canvas = document.querySelector('#c');
 const renderer = new THREE.WebGLRenderer({canvas, alpha: true});
 
 
-function makeScene(elem) {
+function makeScene(elem,path,path2) {
   const scene = new THREE.Scene();
 
-  var loader = new THREE.OBJLoader();
+  var loader = new GLTFLoader();
 
-  loader.load(
-  	// resource URL
-  	"../assets/model/rocket.obj",
+  loader.load( path, function ( gltf ) {
 
-  	// onLoad callback
-  	// Here the loaded data is assumed to be an object
-  	function ( obj ) {
-  		// Add the loaded object to the scene
-  		scene.add( obj );
-  	},
+  	scene.add( gltf.scene );
 
-  	// onProgress callback
-  	function ( xhr ) {
-  		//console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-  	},
+  }, undefined, function ( error ) {
 
-  	// onError callback
-  	function ( err ) {
-  		//console.error( 'An error happened' );
-  	}
-  );
+  	console.error( error );
+
+  } );
+
+  loader.load( path2, function ( gltf ) {
+
+  	scene.add( gltf.scene );
+
+  }, undefined, function ( error ) {
+
+  	console.error( error );
+
+  } );
 
   const fov = 45;
   const aspect = 2;  // the canvas default
   const near = 0.1;
-  const far = 5;
+  const far = 100;
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.set(0, 1, 2);
+  camera.position.set(0, 1, 15);
   camera.lookAt(0, 0, 0);
 
   {
     const color = 0xFFFFFF;
     const intensity = 1;
     const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(-1, 2, 4);
+    light.position.set(-1, 2, 15);
     scene.add(light);
   }
 
@@ -82,7 +81,7 @@ function makeScene(elem) {
 }
 
 function setupScene1() {
-  const sceneInfo = makeScene(document.querySelector('#rock'));
+  const sceneInfo = makeScene(document.querySelector('#rock'),"../assets/model/rocket.glb", "../assets/model/arrow.glb");
   const geometry = new THREE.BoxGeometry(1, 1, 1);
   const material = new THREE.MeshPhongMaterial({color: 'red'});
   const mesh = new THREE.Mesh(geometry, material);
