@@ -31,35 +31,20 @@ import * as THREE from '../assets/js/three/build/three.module.js';
 import {OBJLoader} from '../assets/js/three/examples/jsm/loaders/OBJLoader.js';
 import { GLTFLoader } from '../assets/js/three/examples/jsm/loaders/GLTFLoader.js';
 
-function main() {
+var rocketOBJ = {};
+var arrowOBJ = {};
+
 const canvas = document.querySelector('#c');
 const renderer = new THREE.WebGLRenderer({canvas, alpha: true});
+
+const sceneInfo1 = setupScene1();
+
+requestAnimationFrame(render);
+
 
 
 function makeScene(elem,path,path2) {
   const scene = new THREE.Scene();
-
-  var loader = new GLTFLoader();
-
-  loader.load( path, function ( gltf ) {
-
-  	scene.add( gltf.scene );
-
-  }, undefined, function ( error ) {
-
-  	console.error( error );
-
-  } );
-
-  loader.load( path2, function ( gltf ) {
-
-  	scene.add( gltf.scene );
-
-  }, undefined, function ( error ) {
-
-  	console.error( error );
-
-  } );
 
   const fov = 45;
   const aspect = 2;  // the canvas default
@@ -80,33 +65,53 @@ function makeScene(elem,path,path2) {
   return {scene, camera, elem};
 }
 
+
 function setupScene1() {
-  const sceneInfo = makeScene(document.querySelector('#rock'),"../assets/model/rocket.glb", "../assets/model/arrow.glb");
+  var sceneInfo = makeScene(document.querySelector('#rock'));
+
+  const loader = new OBJLoader();
+
   const geometry = new THREE.BoxGeometry(1, 1, 1);
   const material = new THREE.MeshPhongMaterial({color: 'red'});
+
+  loader.load( "../assets/model/rocket.obj",
+                function ( object ) { //const sceneL = object.scene;
+                                  rocketOBJ = object;
+                                  rocketOBJ.rotation.y = 90;
+                                  sceneInfo.scene.add( rocketOBJ );
+                                  //var meshL = sceneL.children[ 2 ];
+                                  //var geometryL  = meshL.geometry;
+                                  //var meshNew =  new THREE.Mesh(geometryL, material);
+                                  //sceneInfo.scene.add( meshNew );
+                                  //sceneInfo.mesh[0] = meshNew;
+                                  //console.log(sceneInfo.rocketMesh);
+                                  return rocketOBJ;
+                                },
+              undefined,
+              function ( error ) {console.error( error );} );
+
+  loader.load( "../assets/model/arrow.obj",
+              function ( object  ) {// const sceneL = arrowOBJ.scene;
+                                  arrowOBJ = object;
+                                  arrowOBJ.rotation.y = 90;
+                                  sceneInfo.scene.add( arrowOBJ );
+                                  //const meshL = sceneL.children[ 3 ];
+                                  //const geometryL  = meshL.geometry;
+                                  //const meshNew =  new THREE.Mesh(geometryL, material);
+                                  //sceneInfo.scene.add( meshNew );
+                                  //sceneInfo.mesh[1] = meshNew;
+                                },
+              undefined,
+              function ( error ) {console.error( error );} );
+
   const mesh = new THREE.Mesh(geometry, material);
   sceneInfo.scene.add(mesh);
   sceneInfo.mesh = mesh;
+
+  console.log(sceneInfo.mesh);
   return sceneInfo;
 }
 
-function setupScene2() {
-  const sceneInfo = makeScene(document.querySelector('#pyramid'));
-  const radius = .8;
-  const widthSegments = 4;
-  const heightSegments = 2;
-  const geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
-  const material = new THREE.MeshPhongMaterial({
-    color: 'blue',
-    flatShading: true,
-  });
-  const mesh = new THREE.Mesh(geometry, material);
-  sceneInfo.scene.add(mesh);
-  sceneInfo.mesh = mesh;
-  return sceneInfo;
-}
-
-const sceneInfo1 = setupScene1();
 
 function resizeRendererToDisplaySize(renderer) {
   const canvas = renderer.domElement;
@@ -126,11 +131,7 @@ function renderSceneInfo(sceneInfo) {
   const {left, right, top, bottom, width, height} =
       elem.getBoundingClientRect();
 
-  const isOffscreen =
-      bottom < 0 ||
-      top > renderer.domElement.clientHeight ||
-      right < 0 ||
-      left > renderer.domElement.clientWidth;
+  const isOffscreen = bottom < 0 || top > renderer.domElement.clientHeight || right < 0 || left > renderer.domElement.clientWidth;
 
   if (isOffscreen) {
     return;
@@ -146,6 +147,7 @@ function renderSceneInfo(sceneInfo) {
   renderer.render(scene, camera);
 }
 
+
 function render(time) {
   time *= 0.001;
 
@@ -156,19 +158,16 @@ function render(time) {
   renderer.setScissorTest(true);
 
   sceneInfo1.mesh.rotation.y = time * .1;
-  //sceneInfo2.mesh.rotation.y = time * .1;
+  //rocketOBJ.rotation.y = time * .1;
+  //arrowOBJ.rotation.y = time * .1;
 
   renderSceneInfo(sceneInfo1);
-  //renderSceneInfo(sceneInfo2);
 
   requestAnimationFrame(render);
 }
 
-requestAnimationFrame(render);
-}
-
-main();
 </script>
+
 
 <div class ="page__content">
 <canvas id="c"></canvas>
