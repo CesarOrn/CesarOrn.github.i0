@@ -7,8 +7,9 @@ var rocketOBJ, arrowOBJZ1, arrowOBJZ2,arrowOBJY1, arrowOBJY2,arrowOBJX1, arrowOB
 
 var canvas = document.querySelector('#c');
 var renderer = new THREE.WebGLRenderer({canvas, alpha: true});
+renderer.setClearColor(0xFFFFFF);
 
-renderer.domElement.addEventListener('mousedown', () => { this.press = true })
+//renderer.domElement.addEventListener('mousedown', () => { this.press = true })
 
 var lightPos = new THREE.Vector3( 10, 5, 10 );
 var cr_d = new THREE.Vector3( 0.9, 0.9, 0.9 );
@@ -31,7 +32,7 @@ camera.lookAt(0, 0, 0);
   scene.add(light);
 }
 
-const sceneInfo1 = {scene:scene, camera:camera, elem:document.querySelector('#rock')};
+const sceneInfo1 = {scene:scene, camera:camera, elem:document.querySelector('#rocket')};
 
 const loader = new OBJLoader();
 

@@ -21,20 +21,24 @@
 
 #c {
   position: fixed;
+  overflow: hidden;
   margin-left: auto;
   margin-right: auto;
   left: 0;
   top: 0;
-  width: calc(100% - #{$right-sidebar-width-narrow});
+  width: 100%;
   height: 100%;
   display: block;
   z-index: -1;
 }
+
+
 .diagram {
   display: inline-block;
   width: calc(100% - #{$right-sidebar-width-narrow});
   height: 20em;
-  border: 1px solid black;
+  border: 5px solid black;
+  margin-right: .25em;
 }
 .left {
   float: left;
